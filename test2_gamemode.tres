@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Test2Gamemode" load_steps=5 format=3 uid="uid://dfasxkufs61mh"]
+
+[ext_resource type="Script" path="res://test2_gamemode.gd" id="1_0xphk"]
+[ext_resource type="PackedScene" uid="uid://ryujplit1o45" path="res://test_hud.tscn" id="1_vyqg6"]
+[ext_resource type="PackedScene" uid="uid://c5x0y6uhiqusd" path="res://player_camera.tscn" id="2_m707m"]
+[ext_resource type="PackedScene" uid="uid://dxs6gvcoifcdl" path="res://player_alt.tscn" id="2_pmcye"]
+
+[resource]
+resource_name = "TestGamemode2"
+script = ExtResource("1_0xphk")
+player_character_scene = ExtResource("2_pmcye")
+player_camera_scene = ExtResource("2_m707m")
+hud_scene = ExtResource("1_vyqg6")

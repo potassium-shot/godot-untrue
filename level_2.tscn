@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://t0xtnho1lmp7"]
+
+[ext_resource type="Script" path="res://addons/untrue/level_root.gd" id="1_gsa1o"]
+
+[node name="Level2" type="Node" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_gsa1o")
+root_node = NodePath(".")
+
+[node name="Block" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Block"]
+polygon = PackedVector2Array(-34, 441, 198, 537, 515, 356, 722, 357, 719, 302, 785, 306, 791, 249, 847, 255, 849, 197, 928, 204, 928, 593, -44, 601)
+
+[node name="Polygon2D" type="Polygon2D" parent="Block"]
+color = Color(0.356863, 0.141176, 0.0784314, 1)
+polygon = PackedVector2Array(-34, 441, 198, 537, 515, 356, 722, 357, 719, 302, 785, 306, 791, 249, 847, 255, 849, 197, 928, 204, 928, 593, -44, 601)

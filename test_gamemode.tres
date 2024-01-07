@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="TestGamemode" load_steps=4 format=3 uid="uid://0qcrohwtjic"]
+
+[ext_resource type="PackedScene" uid="uid://ryujplit1o45" path="res://test_hud.tscn" id="1_booj4"]
+[ext_resource type="Script" path="res://test_gamemode.gd" id="1_poa5h"]
+[ext_resource type="PackedScene" uid="uid://4gp5vcuxfmdi" path="res://player.tscn" id="2_21108"]
+
+[resource]
+resource_name = "TestGamemode"
+script = ExtResource("1_poa5h")
+player_character_scene = ExtResource("2_21108")
+hud_scene = ExtResource("1_booj4")

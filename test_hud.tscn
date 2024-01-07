@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://ryujplit1o45"]
+
+[sub_resource type="GDScript" id="GDScript_sycoj"]
+script/source = "extends Control
+
+@onready var n_label: Label = $VBoxContainer/Label
+
+func _ready():
+	n_label.text %= Game.get_gamemode().resource_name
+
+func _on_switch_gamemode_button_pressed():
+	if Game.get_gamemode() is TestGamemode:
+		Game.get_level().game_mode = load(\"res://test2_gamemode.tres\")
+	else:
+		Game.get_level().game_mode = load(\"res://test_gamemode.tres\")
+
+func _on_switch_level_button_pressed():
+	if Game.get_level().scene_file_path == \"res://level_1.tscn\":
+		Game.get_game_root().current_level = load(\"res://level_2.tscn\")
+	else:
+		Game.get_game_root().current_level = load(\"res://level_1.tscn\")
+"
+
+[node name="TestHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_sycoj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 18.0
+offset_right = 197.0
+offset_bottom = 279.0
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Gamemode: %s"
+
+[node name="SwitchGamemodeButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Switch Gamemode"
+
+[node name="SwitchLevelButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Switch Level"
+
+[connection signal="pressed" from="VBoxContainer/SwitchGamemodeButton" to="." method="_on_switch_gamemode_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/SwitchLevelButton" to="." method="_on_switch_level_button_pressed"]

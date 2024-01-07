@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkki35i5o4lnv"]
+
+[ext_resource type="Script" path="res://addons/untrue/level_root.gd" id="1_cftna"]
+[ext_resource type="Resource" uid="uid://0qcrohwtjic" path="res://test_gamemode.tres" id="2_nk30n"]
+[ext_resource type="Script" path="res://addons/untrue/player_spawn_2d.gd" id="3_ssggc"]
+
+[node name="Level1" type="Node" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_cftna")
+game_mode = ExtResource("2_nk30n")
+gamemode_replaceable = true
+root_node = NodePath(".")
+
+[node name="Block" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Block"]
+polygon = PackedVector2Array(0, 409, 382, 341, 565, 455, 834, 328, 900, 541, 541, 620, 326, 493, -2, 584)
+
+[node name="Polygon2D" type="Polygon2D" parent="Block"]
+color = Color(0.352941, 0.2, 0.243137, 1)
+polygon = PackedVector2Array(0, 409, 382, 341, 565, 455, 834, 328, 900, 541, 541, 620, 326, 493, -2, 584)
+
+[node name="PlayerSpawn2D" type="Node2D" parent="."]
+position = Vector2(366, 127)
+script = ExtResource("3_ssggc")
+
+[node name="PlayerSpawn2D2" type="Node2D" parent="."]
+position = Vector2(544, 212)
+script = ExtResource("3_ssggc")
+
+[node name="PlayerSpawn2D3" type="Node2D" parent="."]
+position = Vector2(531, 75)
+script = ExtResource("3_ssggc")

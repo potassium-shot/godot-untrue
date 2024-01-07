@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5x0y6uhiqusd"]
+
+[sub_resource type="GDScript" id="GDScript_tp37e"]
+resource_name = "PlayerCamera"
+script/source = "extends Camera2D
+
+const REMOTE_TRANSFORM_NAME: StringName = &\"camera_remote_transform\"
+
+func _ready():
+	var remote_transform: RemoteTransform2D = RemoteTransform2D.new()
+	remote_transform.name = REMOTE_TRANSFORM_NAME
+	Game.get_gamemode()._player_character.add_child(remote_transform)
+	remote_transform.remote_path = get_path()
+	
+	Game.get_game_root().level_changed_same_gamemode.connect(_on_level_changed_same_gamemode)
+
+func _on_level_changed_same_gamemode(_p_new_level):
+	# This is because when the level changes the path changes too, which means the
+	# remote transform no longer points to the camera, so we need to set it back.
+	(
+		Game
+			.get_gamemode()
+			._player_character
+			.get_node(str(REMOTE_TRANSFORM_NAME))
+			.remote_path
+	) = get_path()
+"
+
+[node name="PlayerCamera" type="Camera2D"]
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+script = SubResource("GDScript_tp37e")

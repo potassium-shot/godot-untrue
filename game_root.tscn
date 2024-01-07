@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ce6fl786x4h3l"]
+
+[ext_resource type="Script" path="res://addons/untrue/game_root.gd" id="1_tjutt"]
+[ext_resource type="PackedScene" uid="uid://bkki35i5o4lnv" path="res://level_1.tscn" id="2_f6g71"]
+
+[node name="GameRoot" type="Node" node_paths=PackedStringArray("hud_root")]
+script = ExtResource("1_tjutt")
+default_level = ExtResource("2_f6g71")
+hud_root = NodePath("UiLayer")
+
+[node name="UiLayer" type="CanvasLayer" parent="."]

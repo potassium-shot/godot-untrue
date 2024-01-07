@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   sodipodi:docname="PlayerSpawn2&quot;D.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="45.254834"
+     inkscape:cx="6.7617086"
+     inkscape:cy="8.6841552"
+     inkscape:window-width="948"
+     inkscape:window-height="996"
+     inkscape:window-x="8"
+     inkscape:window-y="40"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#737373"
+       empopacity="0.43921569"
+       color="#737373"
+       opacity="0.14901961"
+       empspacing="4"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect8"
+       style="fill:#ff7f2a;stroke-width:0.506481;stroke-linejoin:round"
+       d="m 8.2532441,8.5553967 c -0.1402971,-0.070146 -0.3661912,-0.070146 -0.5064883,0 L 7.2402675,8.8086341 5.7208027,9.5683461 c -0.140297,0.070146 -0.140297,0.1830907 0,0.2532369 l 0.5064883,0.253238 c 0.1402971,0.07015 0.3661912,0.07015 0.5064883,0 L 8,9.4417274 9.2662206,10.074821 c 0.1402969,0.07015 0.3661912,0.07015 0.5064886,0 L 10.279197,9.821583 c 0.140297,-0.070146 0.140297,-0.1830901 0,-0.2532369 L 8.7597324,8.8086341 Z m 4.5583939,2.2791363 c -0.140297,-0.07015 -0.366191,-0.07015 -0.506488,0 l -0.506489,0.253237 c -0.140296,0.07015 -0.140296,0.183091 0,0.253237 l 1.266222,0.633094 -1.266221,0.633094 c -0.140297,0.07015 -0.140297,0.18309 -1e-6,0.253237 l 0.506489,0.253237 c 0.140297,0.07015 0.366191,0.07015 0.506488,0 l 1.519465,-0.759712 0.506488,-0.253237 c 0.140297,-0.07015 0.140298,-0.183091 0,-0.253237 z m -9.1167882,0 c -0.1402972,-0.07015 -0.3661911,-0.07015 -0.5064882,0 l -1.5194649,0.759712 -0.5064883,0.253238 c -0.1402971,0.07015 -0.1402968,0.18309 3e-7,0.253237 l 2.025953,1.012949 c 0.1402973,0.07015 0.3661909,0.07015 0.5064881,0 l 0.5064883,-0.253237 c 0.140297,-0.07015 0.1402969,-0.183091 -3e-7,-0.253237 L 2.9351172,11.974101 4.2013381,11.341007 c 0.1402972,-0.07015 0.140297,-0.18309 -1e-7,-0.253237 z m 6.0778594,3.038848 c -0.1402974,-0.07015 -0.3661909,-0.07015 -0.5064882,0 L 8,14.506474 6.7337789,13.873381 c -0.1402971,-0.07015 -0.3661908,-0.07015 -0.5064879,0 l -0.5064883,0.253238 c -0.140297,0.07015 -0.1402969,0.18309 2e-7,0.253237 l 2.0259532,1.012949 c 0.140297,0.07015 0.3661907,0.07015 0.5064877,0 l 0.5064883,-0.253237 1.5194649,-0.759712 c 0.140297,-0.07015 0.140297,-0.183091 0,-0.253237 z" />
+    <path
+       d="M 9.4003906,7.7363281 C 8.953138,7.9073285 8.4788159,7.996636 8,8 7.5211841,7.996636 7.046862,7.9073285 6.5996094,7.7363281 L 5,12 c 1.9271676,1.244412 3.9168998,1.419847 6,0 z"
+       style="fill:#fc7f7f;stroke-linejoin:round;fill-opacity:1"
+       id="path5"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       d="M 8,1 C 6.3431491,1 5,2.3431491 5,4 5.0010772,5.2498336 5.7769101,6.36806 6.9472656,6.8066406 7.2837485,6.9336779 7.6403356,6.9991735 8,7 8.3596644,6.9991735 8.7162515,6.9336779 9.0527344,6.8066406 10.22309,6.36806 10.998923,5.2498336 11,4 11,2.3431491 9.6568509,1 8,1 Z"
+       style="fill:#fc7f7f;stroke-linejoin:round;fill-opacity:1"
+       id="path4" />
+  </g>
+</svg>
