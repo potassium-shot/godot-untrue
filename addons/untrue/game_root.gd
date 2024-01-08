@@ -7,7 +7,7 @@ class_name GameRoot extends Node
 static var _instance: GameRoot
 
 ## The level to instantiate automatically at the start of the level, if set.
-@export var default_level: PackedScene = null
+@export_file("*.tscn", "*.scn") var default_level_path: String = ""
 
 ## Node into which instantiate the hud of a [GameMode]. If not set, defaults to this [GameRoot].
 ## Useful for putting the UI into a separate [CanvasLayer].
@@ -15,15 +15,15 @@ static var _instance: GameRoot
 
 @export var transition_animation_player: AnimationPlayer = null
 
-var _current_level_internal: PackedScene
+var _current_level_path_internal: String
 
 ## The [PackedScene] corresponding to the currently loaded level; switching it
 ## switches the current level. Can be null.
-var current_level: PackedScene = null:
+var current_level_path: String = "":
 	get:
-		return _current_level_internal
+		return _current_level_path_internal
 	set(value):
-		transition_to_level(value, StringName())
+		transition_to_level(value)
 
 ## Emitted when a new level is loaded. Does not trigger when setting
 ## [member GameRoot.current_level] to [code]null[/code].
@@ -54,8 +54,8 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	
-	if default_level:
-		current_level = default_level
+	if default_level_path:
+		current_level_path = default_level_path
 
 func _exit_tree():
 	if _instance == self:
@@ -76,36 +76,24 @@ func _set_instanced_level(p_new_level: LevelRoot, p_gamemode_kept: bool):
 		if p_gamemode_kept:
 			level_changed_same_gamemode.emit(_instanced_level)
 
-func transition_to_level(p_level: PackedScene, p_transition: StringName):
-	_current_level_internal = p_level
+func transition_to_level(p_level: String, p_transition: StringName = ""):
+	_current_level_path_internal = p_level
 		
 	if Engine.is_editor_hint():
 		return
 	
 	var new_level: LevelRoot = null
 	var gamemode_kept: bool = false
-	
-	if p_level:
-		new_level = p_level.instantiate() as LevelRoot
 		
-		assert(
-			new_level or not p_level,
-			"PackedScene assigned to current_level in GameRoot should be valid LevelRoot",
-		)
-		
-		if (new_level.gamemode_replaceable and _instanced_level) or not new_level.game_mode:
-			assert(_instanced_level, "Tried to start a level without a gamemode")
-			gamemode_kept = true
+	var start_anim_name: StringName
+	var end_anim_name: StringName
+	var has_end: bool
 	
 	if p_transition:
 		assert(
 			transition_animation_player,
 			"Trying to player transition animation but transition_animation_player is not assigned",
 		)
-		
-		var start_anim_name: StringName
-		var end_anim_name: StringName
-		var has_end: bool
 		
 		if transition_animation_player.has_animation(p_transition):
 			start_anim_name = p_transition
@@ -128,13 +116,25 @@ func transition_to_level(p_level: PackedScene, p_transition: StringName):
 		
 		transition_animation_player.play(start_anim_name)
 		await transition_animation_player.animation_finished
+	
+	# load the level
+	
+	if p_level:
+		new_level = (load(p_level) as PackedScene).instantiate() as LevelRoot
 		
-		# load the level
-		_set_instanced_level(new_level, gamemode_kept)
+		assert(
+			new_level or not p_level,
+			"PackedScene assigned to current_level in GameRoot should be valid LevelRoot",
+		)
 		
+		if (new_level.gamemode_replaceable and _instanced_level) or not new_level.game_mode:
+			assert(_instanced_level, "Tried to start a level without a gamemode")
+			gamemode_kept = true
+		
+	_set_instanced_level(new_level, gamemode_kept)
+	
+	if p_transition:
 		if has_end:
 			transition_animation_player.play(end_anim_name)
 		else:
 			transition_animation_player.play_backwards(start_anim_name)
-	else:
-		_set_instanced_level(new_level, gamemode_kept)
