@@ -120,7 +120,7 @@ func transition_to_level(p_level: String, p_transition: StringName = ""):
 	# load the level
 	
 	if p_level:
-		new_level = (load(p_level) as PackedScene).instantiate() as LevelRoot
+		new_level = (await _load_level_async(p_level)).instantiate() as LevelRoot
 		
 		assert(
 			new_level or not p_level,
@@ -138,3 +138,20 @@ func transition_to_level(p_level: String, p_transition: StringName = ""):
 			transition_animation_player.play(end_anim_name)
 		else:
 			transition_animation_player.play_backwards(start_anim_name)
+
+func _load_level_async(p_path: String) -> PackedScene:
+	ResourceLoader.load_threaded_request(p_path, "PackedScene")
+	
+	while true:
+		match ResourceLoader.load_threaded_get_status(p_path):
+			ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+				pass
+			ResourceLoader.THREAD_LOAD_LOADED:
+				return ResourceLoader.load_threaded_get(p_path) as PackedScene
+			_:
+				assert(false, "Level loading failed")
+				break
+		
+		await get_tree().process_frame
+	
+	return null
