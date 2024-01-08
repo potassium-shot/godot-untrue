@@ -15,6 +15,9 @@ static var _instance: GameRoot
 
 @export var transition_animation_player: AnimationPlayer = null
 
+@export var loading_screen: PackedScene = null
+@export var loading_screen_show_timeout: float = 2.0
+
 var _current_level_path_internal: String
 
 ## The [PackedScene] corresponding to the currently loaded level; switching it
@@ -29,12 +32,17 @@ var current_level_path: String = "":
 ## [member GameRoot.current_level] to [code]null[/code].
 signal level_changed(p_new_level: LevelRoot)
 
-## Emitting when a new level is loaded along with (and not instead of)
+## Emitted when a new level is loaded along with (and not instead of)
 ## [signal GameRoot.level_changed], but only if the same [GameMode] instance was
 ## kept between the two.
 signal level_changed_same_gamemode(p_new_level: LevelRoot)
 
+## Emitted every frame when loading a scene, reports the current level of progress.
+signal loading_level_progress_changed(p_progress: float)
+
 var _instanced_level: LevelRoot = null
+
+var _instanced_loading_screen: Control = null
 
 ## Returns the current instantiated [LevelRoot], or null if no level is loaded.
 func get_level_root() -> LevelRoot:
@@ -142,11 +150,20 @@ func transition_to_level(p_level: String, p_transition: StringName = ""):
 func _load_level_async(p_path: String) -> PackedScene:
 	ResourceLoader.load_threaded_request(p_path, "PackedScene")
 	
+	var loading_timer = get_tree().create_timer(loading_screen_show_timeout)
+	loading_timer.timeout.connect(show_loading_screen)
+	
 	while true:
-		match ResourceLoader.load_threaded_get_status(p_path):
+		var progress: Array = []
+		
+		match ResourceLoader.load_threaded_get_status(p_path, progress):
 			ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-				pass
+				loading_level_progress_changed.emit(progress)
 			ResourceLoader.THREAD_LOAD_LOADED:
+				if loading_timer:
+					loading_timer.timeout.disconnect(show_loading_screen)
+				
+				hide_loading_screen()
 				return ResourceLoader.load_threaded_get(p_path) as PackedScene
 			_:
 				assert(false, "Level loading failed")
@@ -154,4 +171,17 @@ func _load_level_async(p_path: String) -> PackedScene:
 		
 		await get_tree().process_frame
 	
+	if loading_timer:
+		loading_timer.timeout.disconnect(show_loading_screen)
+	
+	hide_loading_screen()
 	return null
+
+func show_loading_screen():
+	if loading_screen:
+		_instanced_loading_screen = loading_screen.instantiate()
+		hud_root.add_child(_instanced_loading_screen)
+
+func hide_loading_screen():
+	if _instanced_loading_screen:
+		_instanced_loading_screen.queue_free()

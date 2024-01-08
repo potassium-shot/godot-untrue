@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://dl3ruksshaf47"]
+
+[sub_resource type="GDScript" id="GDScript_dfo6r"]
+resource_name = "LoadingScreen"
+script/source = "extends Control
+
+@onready var n_progress_bar = $ProgressBar
+
+func _ready():
+	Game.get_game_root().loading_level_progress_changed.connect(_update_progress)
+
+func _update_progress(p_progress: float):
+	n_progress_bar.value = p_progress
+"
+
+[node name="LoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_dfo6r")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -127.5
+offset_top = -13.5
+offset_right = 127.5
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0

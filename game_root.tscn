@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://ce6fl786x4h3l"]
+[gd_scene load_steps=8 format=3 uid="uid://ce6fl786x4h3l"]
 
 [ext_resource type="Script" path="res://addons/untrue/game_root.gd" id="1_tjutt"]
+[ext_resource type="PackedScene" uid="uid://dl3ruksshaf47" path="res://loading_screen.tscn" id="2_63j8y"]
 
 [sub_resource type="Animation" id="Animation_w5wau"]
 length = 0.001
@@ -150,6 +151,7 @@ script = ExtResource("1_tjutt")
 default_level_path = "res://level_1.tscn"
 hud_root = NodePath("UiLayer")
 transition_animation_player = NodePath("TransitionAnimations")
+loading_screen = ExtResource("2_63j8y")
 
 [node name="UiLayer" type="CanvasLayer" parent="."]
 layer = 2
