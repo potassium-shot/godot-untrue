@@ -23,7 +23,7 @@ var current_level: PackedScene = null:
 	get:
 		return _current_level_internal
 	set(value):
-		transition_to_level(value, String())
+		transition_to_level(value, StringName())
 
 ## Emitted when a new level is loaded. Does not trigger when setting
 ## [member GameRoot.current_level] to [code]null[/code].
@@ -76,7 +76,7 @@ func _set_instanced_level(p_new_level: LevelRoot, p_gamemode_kept: bool):
 		if p_gamemode_kept:
 			level_changed_same_gamemode.emit(_instanced_level)
 
-func transition_to_level(p_level: PackedScene, p_transition: String):
+func transition_to_level(p_level: PackedScene, p_transition: StringName):
 	_current_level_internal = p_level
 		
 	if Engine.is_editor_hint():
@@ -103,14 +103,28 @@ func transition_to_level(p_level: PackedScene, p_transition: String):
 			"Trying to player transition animation but transition_animation_player is not assigned",
 		)
 		
-		var start_anim_name: StringName = p_transition + "_start"
-		var end_anim_name: StringName = p_transition + "_end"
+		var start_anim_name: StringName
+		var end_anim_name: StringName
+		var has_end: bool
 		
-		assert(
-			transition_animation_player.has_animation(start_anim_name),
-			"No start animation found for transition %s" % p_transition,
-		)
-		var has_end: bool = transition_animation_player.has_animation(end_anim_name)
+		if transition_animation_player.has_animation(p_transition):
+			start_anim_name = p_transition
+			has_end = false
+		else:
+			start_anim_name = p_transition + "_start"
+			end_anim_name = p_transition + "_end"
+			
+			assert(
+				transition_animation_player.has_animation(start_anim_name),
+				"No start animation found for transition %s" % p_transition,
+			)
+			
+			assert(
+				transition_animation_player.has_animation(end_anim_name),
+				"No end animation found for transition %s" % p_transition,
+			)
+			
+			has_end = true
 		
 		transition_animation_player.play(start_anim_name)
 		await transition_animation_player.animation_finished

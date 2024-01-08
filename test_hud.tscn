@@ -16,9 +16,9 @@ func _on_switch_gamemode_button_pressed():
 
 func _on_switch_level_button_pressed():
 	if Game.get_level().scene_file_path == \"res://level_1.tscn\":
-		Game.get_game_root().transition_to_level(load(\"res://level_2.tscn\"), \"fade_to_black\")
+		Game.get_game_root().transition_to_level(load(\"res://level_2.tscn\"), &\"slide_from_top\")
 	else:
-		Game.get_game_root().transition_to_level(load(\"res://level_1.tscn\"), \"fade_to_black\")
+		Game.get_game_root().transition_to_level(load(\"res://level_1.tscn\"), &\"fade_to_black\")
 "
 
 [node name="TestHud" type="Control"]
