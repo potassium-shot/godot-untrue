@@ -50,7 +50,7 @@ func _init():
 	if not root_node:
 		root_node = self
 
-func _enter_tree():
+func _ready():
 	if not Engine.is_editor_hint():
 		_update_gamemode(null, game_mode)
 
