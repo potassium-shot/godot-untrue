@@ -9,6 +9,9 @@ static var _instance: GameRoot
 ## The level to instantiate automatically at the start of the level, if set.
 @export_file("*.tscn", "*.scn") var default_level_path: String = ""
 
+## Transition for the default level, if set.
+@export var default_level_transition: StringName = &""
+
 ## Node into which instantiate the hud of a [GameMode]. If not set, defaults to this [GameRoot].
 ## Useful for putting the UI into a separate [CanvasLayer].
 @export var hud_root: Node = null
@@ -72,7 +75,7 @@ func _ready():
 		return
 	
 	if default_level_path:
-		current_level_path = default_level_path
+		transition_to_level(default_level_path, default_level_transition)
 
 func _exit_tree():
 	if _instance == self:
@@ -141,8 +144,9 @@ func transition_to_level(p_level: String, p_transition: StringName = &""):
 			
 			has_end = true
 		
-		transition_animation_player.play(start_anim_name)
-		await transition_animation_player.animation_finished
+		if _instanced_level:
+			transition_animation_player.play(start_anim_name)
+			await transition_animation_player.animation_finished
 	
 	# load the level
 	

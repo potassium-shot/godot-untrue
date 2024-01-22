@@ -149,6 +149,7 @@ _data = {
 [node name="GameRoot" type="Node" node_paths=PackedStringArray("hud_root", "transition_animation_player")]
 script = ExtResource("1_tjutt")
 default_level_path = "res://level_1.tscn"
+default_level_transition = &"slide_from_top"
 hud_root = NodePath("UiLayer")
 transition_animation_player = NodePath("TransitionAnimations")
 loading_screen = ExtResource("2_63j8y")
