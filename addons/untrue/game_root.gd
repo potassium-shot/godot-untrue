@@ -12,6 +12,9 @@ static var _instance: GameRoot
 ## Transition for the default level, if set.
 @export var default_level_transition: StringName = &""
 
+## Node into which instantiate the level. If not set, defaults to the [GameRoot].
+@export var level_parent_node: Node = null
+
 ## Node into which instantiate the hud of a [GameMode]. If not set, defaults to this [GameRoot].
 ## Useful for putting the UI into a separate [CanvasLayer].
 @export var hud_root: Node = null
@@ -64,6 +67,9 @@ func _init():
 	if Engine.is_editor_hint():
 		return
 	
+	if not level_parent_node:
+		level_parent_node = self
+	
 	if not hud_root:
 		hud_root = self
 
@@ -90,7 +96,7 @@ func _set_instanced_level(p_new_level: LevelRoot, p_gamemode_kept: bool):
 	
 	if p_new_level:
 		_instanced_level = p_new_level
-		add_child(_instanced_level)
+		level_parent_node.add_child(_instanced_level)
 		level_changed.emit(_instanced_level)
 		
 		if p_gamemode_kept:
