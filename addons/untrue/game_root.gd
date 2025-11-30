@@ -66,10 +66,10 @@ func get_level_root() -> LevelRoot:
 func _init():
 	if Engine.is_editor_hint():
 		return
-	
+
 	if not level_parent_node:
 		level_parent_node = self
-	
+
 	if not hud_root:
 		hud_root = self
 
@@ -79,7 +79,7 @@ func _enter_tree():
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	
+
 	if default_level_path:
 		transition_to_level(default_level_path, default_level_transition)
 
@@ -90,15 +90,15 @@ func _exit_tree():
 func _set_instanced_level(p_new_level: LevelRoot, p_gamemode_kept: bool):
 	if p_gamemode_kept:
 		_instanced_level._transfer_gamemode(p_new_level)
-	
+
 	if _instanced_level:
 		_instanced_level.queue_free()
-	
+
 	if p_new_level:
 		_instanced_level = p_new_level
 		level_parent_node.add_child(_instanced_level)
 		level_changed.emit(_instanced_level)
-		
+
 		if p_gamemode_kept:
 			level_changed_same_gamemode.emit(_instanced_level)
 
@@ -114,62 +114,62 @@ func _set_instanced_level(p_new_level: LevelRoot, p_gamemode_kept: bool):
 ## after loading the level.
 func transition_to_level(p_level: String, p_transition: StringName = &""):
 	_current_level_path_internal = p_level
-		
+
 	if Engine.is_editor_hint():
 		return
-	
+
 	var new_level: LevelRoot = null
 	var gamemode_kept: bool = false
-		
+
 	var start_anim_name: StringName
 	var end_anim_name: StringName
 	var has_end: bool
-	
+
 	if p_transition:
 		assert(
 			transition_animation_player,
 			"Trying to player transition animation but transition_animation_player is not assigned",
 		)
-		
+
 		if transition_animation_player.has_animation(p_transition):
 			start_anim_name = p_transition
 			has_end = false
 		else:
 			start_anim_name = p_transition + "_start"
 			end_anim_name = p_transition + "_end"
-			
+
 			assert(
 				transition_animation_player.has_animation(start_anim_name),
 				"No start animation found for transition %s" % p_transition,
 			)
-			
+
 			assert(
 				transition_animation_player.has_animation(end_anim_name),
 				"No end animation found for transition %s" % p_transition,
 			)
-			
+
 			has_end = true
-		
+
 		if _instanced_level:
 			transition_animation_player.play(start_anim_name)
 			await transition_animation_player.animation_finished
-	
+
 	# load the level
-	
+
 	if p_level:
 		new_level = (await _load_level_async(p_level)).instantiate() as LevelRoot
-		
+
 		assert(
 			new_level or not p_level,
 			"PackedScene assigned to current_level in GameRoot should be valid LevelRoot",
 		)
-		
+
 		if (new_level.gamemode_replaceable and _instanced_level) or not new_level.game_mode:
 			assert(_instanced_level, "Tried to start a level without a gamemode")
 			gamemode_kept = true
-		
+
 	_set_instanced_level(new_level, gamemode_kept)
-	
+
 	if p_transition:
 		if has_end:
 			transition_animation_player.play(end_anim_name)
@@ -178,31 +178,31 @@ func transition_to_level(p_level: String, p_transition: StringName = &""):
 
 func _load_level_async(p_path: String) -> PackedScene:
 	ResourceLoader.load_threaded_request(p_path, "PackedScene")
-	
+
 	var loading_timer = get_tree().create_timer(loading_screen_show_timeout)
 	loading_timer.timeout.connect(_show_loading_screen)
-	
+
 	while true:
 		var progress: Array = []
-		
+
 		match ResourceLoader.load_threaded_get_status(p_path, progress):
 			ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 				loading_level_progress_changed.emit(progress)
 			ResourceLoader.THREAD_LOAD_LOADED:
 				if loading_timer:
 					loading_timer.timeout.disconnect(_show_loading_screen)
-				
+
 				_hide_loading_screen()
 				return ResourceLoader.load_threaded_get(p_path) as PackedScene
 			_:
 				assert(false, "Level loading failed")
 				break
-		
+
 		await get_tree().process_frame
-	
+
 	if loading_timer:
 		loading_timer.timeout.disconnect(_show_loading_screen)
-	
+
 	_hide_loading_screen()
 	return null
 
@@ -214,3 +214,44 @@ func _show_loading_screen():
 func _hide_loading_screen():
 	if _instanced_loading_screen:
 		_instanced_loading_screen.queue_free()
+
+func transition_call(p_transition: StringName, p_function: Callable):
+	var start_anim_name: StringName
+	var end_anim_name: StringName
+	var has_end: bool
+
+	assert(
+		transition_animation_player,
+		"Trying to player transition animation but transition_animation_player is not assigned",
+	)
+
+	if transition_animation_player.has_animation(p_transition):
+		start_anim_name = p_transition
+		has_end = false
+	else:
+		start_anim_name = p_transition + "_start"
+		end_anim_name = p_transition + "_end"
+
+		assert(
+			transition_animation_player.has_animation(start_anim_name),
+			"No start animation found for transition %s" % p_transition,
+		)
+
+		assert(
+			transition_animation_player.has_animation(end_anim_name),
+			"No end animation found for transition %s" % p_transition,
+		)
+
+		has_end = true
+
+	transition_animation_player.play(start_anim_name)
+	await transition_animation_player.animation_finished
+
+	p_function.call()
+
+	if has_end:
+		transition_animation_player.play(end_anim_name)
+	else:
+		transition_animation_player.play_backwards(start_anim_name)
+
+	await transition_animation_player.animation_finished

@@ -1,3 +1,4 @@
+@tool
 class_name Test2Gamemode extends GameMode
 
 func _started():

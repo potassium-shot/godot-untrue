@@ -9,7 +9,7 @@ class_name GameMode extends Resource
 @export var player_character_scene: PackedScene = null:
 	set(value):
 		player_character_scene = value
-		
+
 		if not Engine.is_editor_hint() and _is_started:
 			_any_player_scene_updated(&"character")
 
@@ -17,7 +17,7 @@ class_name GameMode extends Resource
 @export var player_camera_scene: PackedScene = null:
 	set(value):
 		player_camera_scene = value
-		
+
 		if not Engine.is_editor_hint() and _is_started:
 			_any_player_scene_updated(&"camera")
 
@@ -25,7 +25,7 @@ class_name GameMode extends Resource
 @export var player_controller_scene: PackedScene = null:
 	set(value):
 		player_controller_scene = value
-		
+
 		if not Engine.is_editor_hint() and _is_started:
 			_any_player_scene_updated(&"controller")
 
@@ -33,7 +33,7 @@ class_name GameMode extends Resource
 @export var hud_scene: PackedScene = null:
 	set(value):
 		hud_scene = value
-		
+
 		if not Engine.is_editor_hint() and _is_started:
 			_hud_scene_updated()
 
@@ -89,16 +89,17 @@ const NOTIFICATION_LEVEL_CHANGED: int = 162
 func _notification(what: int):
 	match what:
 		NOTIFICATION_STARTED:
+			_pre_level_loaded()
 			_is_started = true
 			_any_player_scene_updated(&"character")
 			_any_player_scene_updated(&"camera")
 			_any_player_scene_updated(&"controller")
 			_hud_scene_updated()
 			_started()
-		
+
 		NOTIFICATION_STOPPED:
 			_stopped()
-			
+
 			if _player_character:
 				_player_character.queue_free()
 			if _player_camera:
@@ -107,45 +108,48 @@ func _notification(what: int):
 				_player_controller.queue_free()
 			if _hud:
 				_hud.queue_free()
-			
+
 			_is_started = false
-		
+
 		NOTIFICATION_LEVEL_CHANGED:
+			_pre_level_loaded()
 			_level_changed()
-		
+
 		_:
 			pass
 
 func _any_player_scene_updated(scene: StringName):
 	var current_one_property_name: StringName = "_player_%s" % scene
 	var current_one: Node = get(current_one_property_name)
-	
+
 	if current_one:
 		current_one.queue_free()
-	
+
 	var packed_scene: PackedScene = get("player_%s_scene" % scene)
-	
+
 	if packed_scene:
 		var new_one: Node = packed_scene.instantiate()
 		Game.get_world().add_child(new_one)
-		
+
 		if scene == &"character": # Don't judge me please
 			var node_2d = new_one as Node2D
-			
+
 			if node_2d:
 				var selected_spawn = _select_spawn_point_2d()
-				
+
 				if selected_spawn:
 					node_2d.global_position = selected_spawn.global_position
+					node_2d.global_rotation = selected_spawn.global_rotation
 			else:
 				var node_3d = new_one as Node3D
-				
+
 				if node_3d:
 					var select_spawn = _select_spawn_point_3d()
-					
+
 					if select_spawn:
 						node_3d.global_position = select_spawn.global_position
-		
+						node_3d.global_rotation = select_spawn.global_rotation
+
 		set(current_one_property_name, new_one)
 	else:
 		set(current_one_property_name, null)
@@ -153,7 +157,7 @@ func _any_player_scene_updated(scene: StringName):
 func _hud_scene_updated():
 	if _hud:
 		_hud.queue_free()
-	
+
 	if hud_scene:
 		var new_hud: Control = hud_scene.instantiate() as Control
 		assert(new_hud, "Hud scene should be a valid Control")
@@ -165,6 +169,12 @@ func _hud_scene_updated():
 ## Returns [code]true[/code] if the [GameMode] is started and hasn't stopped.
 func is_started() -> bool:
 	return _is_started
+
+
+## Called when a new level is loaded, before the player is spawned.
+## The player may already be spawned if the gamemode was conserved.
+func _pre_level_loaded() -> void:
+	pass
 
 ## Called when the [GameMode] is started, guarranteed to be after the [GameRoot]
 ## and the [LevelRoot] are ready.
@@ -188,7 +198,7 @@ func _level_changed():
 ## [PlayerSpawn2D] nodes.
 func _select_spawn_point_2d() -> PlayerSpawn2D:
 	var spawn_points: Array = PlayerSpawn2D.get_available()
-	
+
 	if not spawn_points.is_empty():
 		return spawn_points.pick_random()
 	else:
@@ -199,7 +209,7 @@ func _select_spawn_point_2d() -> PlayerSpawn2D:
 ## [PlayerSpawn3D] nodes.
 func _select_spawn_point_3d() -> PlayerSpawn3D:
 	var spawn_points: Array = PlayerSpawn3D.get_available()
-	
+
 	if not spawn_points.is_empty():
 		return spawn_points.pick_random()
 	else:
@@ -209,11 +219,11 @@ func _transfer_scenes(p_new_level: LevelRoot):
 	if _player_character:
 		_player_character.get_parent().remove_child(_player_character)
 		p_new_level.add_child(_player_character)
-	
+
 	if _player_camera:
 		_player_camera.get_parent().remove_child(_player_camera)
 		p_new_level.add_child(_player_camera)
-	
+
 	if _player_controller:
 		_player_controller.get_parent().remove_child(_player_controller)
 		p_new_level.add_child(_player_controller)
